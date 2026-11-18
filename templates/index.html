@@ -1,0 +1,375 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CreditExpert | Sistema Experto</title>
+    <link rel="icon" type="image/png"
+      href="{{ url_for('static', filename='img/logo.png') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- MENÚ LATERAL -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">
+                <img
+                    src="{{ url_for('static', filename='img/logo.png') }}"
+                    alt="CreditExpert"
+                    class="sidebar-logo"
+                >
+            </div>
+            <div>
+                <h2>CreditExpert</h2>
+                <span>Sistema Experto</span>
+            </div>
+        </div>
+
+        <div class="menu-label">MENÚ PRINCIPAL</div>
+
+        <nav>
+            <a href="#inicio" class="nav-link active">
+                <i class="fa-solid fa-house"></i>
+                <span>Inicio</span>
+            </a>
+
+            <a href="#evaluacion" class="nav-link">
+                <i class="fa-solid fa-file-signature"></i>
+                <span>Evaluar crédito</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <i class="fa-solid fa-brain"></i>
+            <div>
+                <strong>Motor de reglas</strong>
+                <span>Evaluación financiera</span>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+
+        <!-- BARRA SUPERIOR -->
+        <header class="topbar">
+            <div>
+                <h3>Panel de evaluación</h3>
+                <p>Sistema inteligente de análisis crediticio</p>
+            </div>
+
+            <div class="topbar-right">
+                <span class="status">
+                    <span class="status-dot"></span>
+                    Sistema operativo
+                </span>
+                <div class="avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- INICIO -->
+        <section id="inicio" class="hero">
+
+            <div class="hero-content">
+                <span class="hero-badge">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    SISTEMA BASADO EN REGLAS
+                </span>
+
+                <h1>Evaluación inteligente de créditos</h1>
+
+                <p>
+                    Analiza la información financiera de los
+                    solicitantes mediante reglas de conocimiento
+                    y obtén recomendaciones claras y justificadas.
+                </p>
+
+                <a href="#evaluacion" class="hero-button">
+                    Nueva evaluación
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="hero-illustration">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+
+        </section>
+
+        <!-- TARJETAS INFORMATIVAS -->
+        <section class="cards">
+
+            <div class="info-card">
+                <div class="card-icon blue">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <div>
+                    <h3>Basado en reglas</h3>
+                    <p>Conocimiento financiero estructurado.</p>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="card-icon green">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h3>Análisis de riesgo</h3>
+                    <p>Evaluación de capacidad de pago.</p>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="card-icon purple">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                    <h3>Resultados rápidos</h3>
+                    <p>Recomendaciones automáticas.</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- FORMULARIO -->
+        <section id="evaluacion" class="evaluation-section">
+
+            <div class="section-header">
+                <div>
+                    <span class="section-tag">EVALUACIÓN</span>
+                    <h2>Nueva solicitud de crédito</h2>
+                    <p>
+                        Completa la información financiera
+                        para realizar el análisis.
+                    </p>
+                </div>
+
+                <div class="section-icon">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                </div>
+            </div>
+
+            <form method="POST" action="#evaluacion" class="credit-form">
+
+                <div class="form-title">
+                    <i class="fa-solid fa-wallet"></i>
+                    <h3>Información financiera</h3>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="ingresos">
+                            Ingresos mensuales
+                        </label>
+
+                        <div class="input-wrapper">
+                            <span>$</span>
+                            <input
+                                id="ingresos"
+                                type="text"
+                                name="ingresos"
+                                class="input-moneda"
+                                placeholder="Ej: 2500000"
+                                inputmode="numeric"
+                                autocomplete="off"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gastos">
+                            Gastos mensuales
+                        </label>
+
+                        <div class="input-wrapper">
+                            <span>$</span>
+                            <input
+                                id="gastos"
+                                type="text"
+                                name="gastos"
+                                class="input-moneda"
+                                placeholder="Ej: 1.200.000"
+                                inputmode="numeric"
+                                autocomplete="off"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="deudas">
+                            Cuotas mensuales de deudas
+                        </label>
+
+                        <div class="input-wrapper">
+                            <span>$</span>
+                            <input
+                                id="deudas"
+                                type="text"
+                                name="deudas"
+                                class="input-moneda"
+                                placeholder="Ej: 300.000"
+                                inputmode="numeric"
+                                autocomplete="off"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="historial">
+                            Historial crediticio
+                        </label>
+
+                        <select id="historial" name="historial" required>
+                            <option value="bueno">Bueno</option>
+                            <option value="regular">Regular</option>
+                            <option value="malo">Malo</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-footer">
+                    <p>
+                        <i class="fa-solid fa-lock"></i>
+                        Evaluación académica basada en reglas.
+                    </p>
+
+                    <button type="submit" class="evaluate-btn">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        Analizar solicitud
+                    </button>
+                </div>
+
+            </form>
+
+            {% if error %}
+            <div class="error-message">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <!-- RESULTADO -->
+            {% if resultado %}
+
+            <div class="result-card
+                {% if resultado.estado == 'APROBADO' %}
+                    approved
+                {% elif resultado.estado == 'RECHAZADO' %}
+                    rejected
+                {% else %}
+                    review
+                {% endif %}">
+
+                <div class="result-header">
+                    <div>
+                        <span class="section-tag">RESULTADO</span>
+                        <h2>Resultado de la evaluación</h2>
+                    </div>
+
+                    <div class="result-status">
+                        {% if resultado.estado == 'APROBADO' %}
+                            <i class="fa-solid fa-circle-check"></i>
+                        {% elif resultado.estado == 'RECHAZADO' %}
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        {% else %}
+                            <i class="fa-solid fa-clock"></i>
+                        {% endif %}
+
+                        {{ resultado.estado }}
+                    </div>
+                </div>
+
+                <div class="result-metrics">
+
+                    <div class="metric">
+                        <span>Capacidad disponible</span>
+                        <strong>
+                            ${{ "{:,.0f}".format(resultado.disponible) }}
+                        </strong>
+                    </div>
+
+                    <div class="metric">
+                        <span>Nivel de endeudamiento</span>
+                        <strong>
+                            {{ resultado.endeudamiento }}%
+                        </strong>
+                    </div>
+
+                </div>
+
+                <div class="result-explanation">
+                    <h3>
+                        <i class="fa-solid fa-list-check"></i>
+                        Criterios de evaluación
+                    </h3>
+
+                    <ul>
+                        {% for razon in resultado.razones %}
+                        <li>
+                            <i class="fa-solid fa-circle-info"></i>
+                            {{ razon }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </section>
+
+        <footer>
+            CreditExpert · Sistema Experto para Evaluación de Créditos
+            <span>Proyecto académico</span>
+        </footer>
+
+    </main>
+</div>
+
+<script>
+    const links = document.querySelectorAll(".nav-link");
+
+    links.forEach(link => {
+        link.addEventListener("click", () => {
+            links.forEach(item => item.classList.remove("active"));
+            link.classList.add("active");
+        });
+    });
+
+
+document.querySelectorAll(".input-moneda").forEach(input => {
+
+    input.addEventListener("input", function () {
+
+        // Conservar únicamente números
+        let valor = this.value.replace(/\D/g, "");
+
+        // Evitar ceros innecesarios al inicio
+        valor = valor.replace(/^0+(?=\d)/, "");
+
+        // Agregar puntos como separadores de miles
+        this.value = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
