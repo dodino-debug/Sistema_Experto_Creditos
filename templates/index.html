@@ -1,470 +1,107 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>CreditExpert | Evaluación de Créditos</title>
-
-    <link rel="icon" type="image/png"
-          href="{{ url_for('static', filename='img/logo.png') }}">
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CreditExpert | Evaluación crediticia</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
-
 <body>
-
-<div class="app">
-
-    <!-- MENÚ LATERAL -->
-    <aside class="sidebar">
-
-        <div class="logo">
-            <div class="logo-icon">
-                <img
-                    src="{{ url_for('static', filename='img/logo.png') }}"
-                    alt="CreditExpert"
-                    class="sidebar-logo">
-            </div>
-
-            <div>
-                <h2>CreditExpert</h2>
-                <span>Sistema Experto</span>
-            </div>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="" onerror="this.style.display='none'">
+      <div><strong>CreditExpert</strong><small>Sistema experto</small></div>
+    </div>
+    <p class="menu-title">MENÚ PRINCIPAL</p>
+    <nav>
+      <a href="#inicio"><i class="fa-solid fa-house"></i> Inicio</a>
+      <a href="#evaluacion"><i class="fa-solid fa-file-circle-check"></i> Evaluar crédito</a>
+    </nav>
+    <div class="sidebar-footer"><i class="fa-solid fa-brain"></i> Motor basado en reglas</div>
+  </aside>
+  <main>
+    <header class="topbar"><div><strong>Panel de evaluación</strong><span>Simulador académico de análisis crediticio</span></div><span class="online">● Sistema operativo</span></header>
+    <section id="inicio" class="hero">
+      <div><span class="eyebrow">SISTEMA BASADO EN REGLAS</span><h1>Evaluación inteligente de créditos</h1><p>Evalúa solicitudes, estima montos financiables y consulta cuotas, tasas y plazos de forma transparente.</p><a href="#evaluacion" class="hero-button">Nueva evaluación <i class="fa-solid fa-arrow-right"></i></a></div>
+      <i class="fa-solid fa-chart-line hero-icon" aria-hidden="true"></i>
+    </section>
+    <section class="features">
+      <article><i class="fa-solid fa-brain"></i><div><strong>Reglas transparentes</strong><p>Conoce cada criterio aplicado.</p></div></article>
+      <article><i class="fa-solid fa-calculator"></i><div><strong>Cuota calculada</strong><p>Amortización con cuota fija.</p></div></article>
+      <article><i class="fa-solid fa-shield-halved"></i><div><strong>Capacidad de pago</strong><p>Montos ajustados a los ingresos.</p></div></article>
+    </section>
+    <section id="evaluacion" class="section">
+      <div class="section-heading"><span>EVALUACIÓN</span><h2>Nueva solicitud de crédito</h2><p>Completa los datos para recibir una simulación financiera.</p></div>
+      <form method="post" action="#evaluacion" class="panel">
+        <h3><i class="fa-solid fa-user-check"></i> Datos del solicitante</h3>
+        <div class="form-grid">
+          <label class="full">Nombre completo<input name="nombre" maxlength="100" required value="{{ datos.nombre }}" placeholder="Ej: Juan Pérez García"></label>
+          <label>Ingresos mensuales ($)<input name="ingresos" class="money" inputmode="numeric" required value="{{ datos.ingresos }}" placeholder="2.500.000"></label>
+          <label>Gastos mensuales ($)<input name="gastos" class="money" inputmode="numeric" required value="{{ datos.gastos }}" placeholder="1.200.000"></label>
+          <label>Cuotas de deudas actuales ($)<input name="deudas" class="money" inputmode="numeric" required value="{{ datos.deudas }}" placeholder="300.000"></label>
+          <label>Historial crediticio<select name="historial"><option value="bueno" {% if datos.historial == 'bueno' %}selected{% endif %}>Bueno</option><option value="regular" {% if datos.historial == 'regular' %}selected{% endif %}>Regular</option><option value="malo" {% if datos.historial == 'malo' %}selected{% endif %}>Malo</option></select></label>
+          <label>Tipo de crédito<select name="tipo" id="tipo">{% for clave, producto in productos.items() %}<option value="{{ clave }}" {% if datos.tipo == clave %}selected{% endif %}>{{ producto.nombre }}</option>{% endfor %}</select></label>
+          <label>Monto solicitado ($)<input name="solicitado" class="money" inputmode="numeric" required value="{{ datos.solicitado }}" placeholder="10.000.000"></label>
+          <label>Plazo (meses)<select name="plazo" id="plazo" data-selected="{{ datos.plazo }}"></select></label>
         </div>
-
-        <div class="menu-label">MENÚ PRINCIPAL</div>
-
-        <nav>
-            <a href="#inicio" class="nav-link active">
-                <i class="fa-solid fa-house"></i>
-                <span>Inicio</span>
-            </a>
-
-            <a href="#evaluacion" class="nav-link">
-                <i class="fa-solid fa-file-signature"></i>
-                <span>Evaluar crédito</span>
-            </a>
-        </nav>
-
-        <div class="sidebar-bottom">
-            <i class="fa-solid fa-brain"></i>
-            <div>
-                <strong>Motor de reglas</strong>
-                <span>Evaluación financiera</span>
-            </div>
+        <div class="form-bottom"><span><i class="fa-solid fa-circle-info"></i> Simulación académica, no oferta bancaria.</span><button type="submit"><i class="fa-solid fa-magnifying-glass-chart"></i> Evaluar solicitud</button></div>
+      </form>
+      {% if error %}<div class="alert" role="alert"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>{% endif %}
+      {% if resultado %}
+      <section class="result {{ 'approved' if resultado.estado == 'APROBADO' else 'rejected' }}" aria-live="polite">
+        <div class="result-heading"><div><span>RESULTADO DE LA EVALUACIÓN</span><h2>{{ resultado.nombre }}</h2><p>{{ resultado.producto }}</p></div><span class="status-pill"><i class="fa-solid {{ 'fa-circle-check' if resultado.estado == 'APROBADO' else 'fa-circle-xmark' }}"></i> {{ resultado.estado }}</span></div>
+        <div class="metrics">
+          <div><small>Monto solicitado</small><strong>{{ resultado.solicitado | cop }}</strong></div>
+          <div><small>Monto aprobado</small><strong>{{ resultado.aprobado | cop }}</strong></div>
+          <div><small>Plazo solicitado</small><strong>{{ resultado.plazo }} meses</strong></div>
+          <div><small>Capacidad disponible actual</small><strong>{{ resultado.disponible | cop }}</strong></div>
         </div>
-
-    </aside>
-
-    <!-- CONTENIDO PRINCIPAL -->
-    <main class="main-content">
-
-        <header class="topbar">
-            <div>
-                <h3>Panel de evaluación</h3>
-                <p>Sistema inteligente de análisis crediticio</p>
-            </div>
-
-            <div class="topbar-right">
-                <span class="status">
-                    <span class="status-dot"></span>
-                    Sistema operativo
-                </span>
-
-                <div class="avatar">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-            </div>
-        </header>
-
-        <!-- INICIO -->
-        <section id="inicio" class="hero">
-
-            <div class="hero-content">
-
-                <span class="hero-badge">
-                    <i class="fa-solid fa-brain"></i>
-                    SISTEMA BASADO EN REGLAS
-                </span>
-
-                <h1>Evaluación inteligente de créditos</h1>
-
-                <p>
-                    Analiza la información financiera de los
-                    solicitantes mediante reglas de conocimiento
-                    y obtén resultados claros y justificados.
-                </p>
-
-                <a href="#evaluacion" class="hero-button">
-                    Nueva evaluación
-                    <i class="fa-solid fa-arrow-right"></i>
-                </a>
-
-            </div>
-
-            <div class="hero-illustration">
-                <i class="fa-solid fa-chart-line"></i>
-            </div>
-
-        </section>
-
-        <!-- TARJETAS -->
-        <section class="cards">
-
-            <div class="info-card">
-                <div class="card-icon blue">
-                    <i class="fa-solid fa-brain"></i>
-                </div>
-                <div>
-                    <h3>Basado en reglas</h3>
-                    <p>Conocimiento financiero estructurado.</p>
-                </div>
-            </div>
-
-            <div class="info-card">
-                <div class="card-icon green">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <div>
-                    <h3>Análisis de riesgo</h3>
-                    <p>Evaluación de capacidad de pago.</p>
-                </div>
-            </div>
-
-            <div class="info-card">
-                <div class="card-icon purple">
-                    <i class="fa-solid fa-bolt"></i>
-                </div>
-                <div>
-                    <h3>Resultados rápidos</h3>
-                    <p>Decisiones automáticas justificadas.</p>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- EVALUACIÓN -->
-        <section id="evaluacion" class="evaluation-section">
-
-            <div class="section-header">
-                <div>
-                    <span class="section-tag">EVALUACIÓN</span>
-                    <h2>Nueva solicitud de crédito</h2>
-                    <p>
-                        Completa la información financiera
-                        para realizar el análisis.
-                    </p>
-                </div>
-
-                <div class="section-icon">
-                    <i class="fa-solid fa-clipboard-check"></i>
-                </div>
-            </div>
-
-            <form method="POST"
-                  action="#evaluacion"
-                  class="credit-form">
-
-                <div class="form-title">
-                    <i class="fa-solid fa-wallet"></i>
-                    <h3>Información financiera</h3>
-                </div>
-
-                <div class="form-grid">
-
-                    <div class="form-group">
-                        <label for="ingresos">
-                            Ingresos mensuales
-                        </label>
-
-                        <div class="input-wrapper">
-                            <span>$</span>
-                            <input
-                                id="ingresos"
-                                type="text"
-                                name="ingresos"
-                                class="input-moneda"
-                                inputmode="numeric"
-                                placeholder="Ej: 2.500.000"
-                                value="{{ datos.ingresos }}"
-                                required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="gastos">
-                            Gastos mensuales
-                        </label>
-
-                        <div class="input-wrapper">
-                            <span>$</span>
-                            <input
-                                id="gastos"
-                                type="text"
-                                name="gastos"
-                                class="input-moneda"
-                                inputmode="numeric"
-                                placeholder="Ej: 1.200.000"
-                                value="{{ datos.gastos }}"
-                                required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="deudas">
-                            Cuotas mensuales de deudas
-                        </label>
-
-                        <div class="input-wrapper">
-                            <span>$</span>
-                            <input
-                                id="deudas"
-                                type="text"
-                                name="deudas"
-                                class="input-moneda"
-                                inputmode="numeric"
-                                placeholder="Ej: 300.000"
-                                value="{{ datos.deudas }}"
-                                required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="historial">
-                            Historial crediticio
-                        </label>
-
-                        <select id="historial"
-                                name="historial" required>
-
-                            <option value="bueno"
-                                {% if datos.historial == 'bueno' %}
-                                selected
-                                {% endif %}>
-                                Bueno
-                            </option>
-
-                            <option value="regular"
-                                {% if datos.historial == 'regular' %}
-                                selected
-                                {% endif %}>
-                                Regular
-                            </option>
-
-                            <option value="malo"
-                                {% if datos.historial == 'malo' %}
-                                selected
-                                {% endif %}>
-                                Malo
-                            </option>
-
-                        </select>
-                    </div>
-
-                </div>
-
-                <div class="form-footer">
-                    <p>
-                        <i class="fa-solid fa-lock"></i>
-                        Evaluación académica basada en reglas.
-                    </p>
-
-                    <button type="submit" class="evaluate-btn">
-                        <i class="fa-solid fa-magnifying-glass-chart"></i>
-                        Analizar solicitud
-                    </button>
-                </div>
-
-            </form>
-
-            {% if error %}
-            <div class="error-message" role="alert">
-                <i class="fa-solid fa-circle-exclamation"></i>
-                {{ error }}
-            </div>
-            {% endif %}
-
-            <!-- RESULTADO -->
-            {% if resultado %}
-
-            <div class="result-card
-                {% if resultado.estado == 'APROBADO' %}
-                    approved
-                {% else %}
-                    rejected
-                {% endif %}">
-
-                <div class="result-header">
-                    <div>
-                        <span class="section-tag">
-                            RESULTADO
-                        </span>
-                        <h2>Resultado de la evaluación</h2>
-                    </div>
-
-                    <div class="result-status">
-                        {% if resultado.estado == 'APROBADO' %}
-                            <i class="fa-solid fa-circle-check"></i>
-                        {% else %}
-                            <i class="fa-solid fa-circle-xmark"></i>
-                        {% endif %}
-
-                        {{ resultado.estado }}
-                    </div>
-                </div>
-
-                <div class="result-metrics">
-
-                    <div class="metric">
-                        <span>Capacidad disponible</span>
-                        <strong>
-                            ${{ "{:,.0f}".format(resultado.disponible).replace(",", ".") }}
-                        </strong>
-                    </div>
-
-                    <div class="metric">
-                        <span>Nivel de endeudamiento</span>
-                        <strong>
-                            {{ resultado.endeudamiento }}%
-                        </strong>
-                    </div>
-
-                </div>
-
-                <!-- REGLAS EVALUADAS -->
-                <div class="criteria-section">
-                    <h3>
-                        <i class="fa-solid fa-list-check"></i>
-                        Verificación de criterios
-                    </h3>
-
-                    <div class="criteria-grid">
-
-                        {% for criterio in resultado.criterios %}
-
-                        <div class="criteria-item
-                            {% if criterio.cumple %}
-                                criteria-success
-                            {% else %}
-                                criteria-fail
-                            {% endif %}">
-
-                            <div class="criteria-icon">
-                                {% if criterio.cumple %}
-                                    <i class="fa-solid fa-check"></i>
-                                {% else %}
-                                    <i class="fa-solid fa-xmark"></i>
-                                {% endif %}
-                            </div>
-
-                            <div>
-                                <strong>{{ criterio.nombre }}</strong>
-                                <span>{{ criterio.detalle }}</span>
-                            </div>
-
-                        </div>
-
-                        {% endfor %}
-
-                    </div>
-                </div>
-
-                <!-- EXPLICACIÓN -->
-                <div class="result-explanation">
-                    <h3>
-                        <i class="fa-solid fa-circle-info"></i>
-                        Explicación de la decisión
-                    </h3>
-
-                    <ul>
-                        {% for razon in resultado.razones %}
-                        <li>
-                            <i class="fa-solid fa-angle-right"></i>
-                            {{ razon }}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
-            </div>
-
-            {% endif %}
-
-        </section>
-
-        <footer>
-            <span>
-                CreditExpert · Sistema Experto de Créditos
-            </span>
-            <span>Proyecto académico</span>
-        </footer>
-
-    </main>
+        {% if resultado.estado == 'APROBADO' %}
+        <div class="finance"><h3>Condiciones simuladas del crédito</h3><div class="metrics"><div><small>Tasa efectiva anual (E.A.)</small><strong>{{ '%.2f'|format(resultado.tasa_ea) }}%</strong></div><div><small>Tasa mensual equivalente</small><strong>{{ '%.2f'|format(resultado.tasa_mensual) }}%</strong></div><div><small>Cuota mensual estimada</small><strong>{{ resultado.cuota | cop }}</strong></div><div><small>Total estimado a pagar</small><strong>{{ resultado.total | cop }}</strong></div><div><small>Intereses estimados</small><strong>{{ resultado.intereses | cop }}</strong></div><div><small>Cuota máxima según reglas</small><strong>{{ resultado.cuota_maxima | cop }}</strong></div></div><p class="disclaimer">Cuota fija sin seguros, comisiones, impuestos ni cargos adicionales. Valores estimados; no constituyen aprobación ni oferta real de una entidad financiera.</p></div>
+        {% else %}<p class="rejection-note">No se aprueba un desembolso bajo las reglas del simulador. Por eso el monto aprobado es $0 y no se presentan tasas ni cuotas como oferta aprobada.</p>{% endif %}
+        <h3 class="criteria-title">Criterios evaluados</h3>
+        <div class="criteria">{% for criterio in resultado.criterios %}<div class="criterion"><i class="fa-solid {{ 'fa-circle-check ok' if criterio.cumple else 'fa-circle-xmark fail' }}"></i><div><strong>{{ criterio.nombre }}</strong><small>{{ criterio.detalle }}</small></div></div>{% endfor %}</div>
+        <div class="explanation"><h3>Explicación de la decisión</h3><ul>{% for razon in resultado.razones %}<li>{{ razon }}</li>{% endfor %}</ul></div>
+      </section>
+      {% endif %}
+    </section>
+    <footer>CreditExpert · Proyecto académico · Tasas y políticas ilustrativas</footer>
+  </main>
 </div>
-
 <script>
-    // Navegación lateral
-    const links = document.querySelectorAll(".nav-link");
-
-    links.forEach(link => {
-        link.addEventListener("click", () => {
-            links.forEach(item => item.classList.remove("active"));
-            link.classList.add("active");
-        });
-    });
-
-    // Formato de miles
-    function formatearMoneda(valor) {
-        let numeros = valor.replace(/\D/g, "");
-        numeros = numeros.replace(/^0+(?=\d)/, "");
-
-        return numeros.replace(
-            /\B(?=(\d{3})+(?!\d))/g,
-            "."
-        );
+const plazos = {{ plazos_por_tipo | tojson }};
+const tipo = document.getElementById('tipo');
+const plazo = document.getElementById('plazo');
+function actualizarPlazos() {
+  const anterior = plazo.value || plazo.dataset.selected;
+  plazo.innerHTML = '';
+  (plazos[tipo.value] || []).forEach(meses => {
+    const opcion = document.createElement('option');
+    opcion.value = meses;
+    opcion.textContent = meses + ' meses';
+    if (String(meses) === String(anterior)) opcion.selected = true;
+    plazo.appendChild(opcion);
+  });
+}
+tipo.addEventListener('change', actualizarPlazos);
+actualizarPlazos();
+function formato(valor) { return valor.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+document.querySelectorAll('.money').forEach(campo => {
+  campo.value = formato(campo.value);
+  campo.addEventListener('input', () => {
+    const antes = campo.value.slice(0, campo.selectionStart).replace(/\D/g, '').length;
+    campo.value = formato(campo.value);
+    let posicion = 0, digitos = 0;
+    while (posicion < campo.value.length && digitos < antes) {
+      if (/\d/.test(campo.value[posicion])) digitos++;
+      posicion++;
     }
-
-    document.querySelectorAll(".input-moneda").forEach(input => {
-        input.addEventListener("input", function () {
-            const posicion = this.selectionStart;
-            const antes = this.value.slice(0, posicion);
-            const cantidadDigitos = antes.replace(/\D/g, "").length;
-
-            this.value = formatearMoneda(this.value);
-
-            if (cantidadDigitos === 0) {
-                this.setSelectionRange(0, 0);
-                return;
-            }
-
-            let digitos = 0;
-            let nuevaPosicion = this.value.length;
-
-            for (let i = 0; i < this.value.length; i++) {
-                if (/\d/.test(this.value[i])) {
-                    digitos++;
-                }
-
-                if (digitos === cantidadDigitos) {
-                    nuevaPosicion = i + 1;
-                    break;
-                }
-            }
-
-            this.setSelectionRange(nuevaPosicion, nuevaPosicion);
-        });
-
-        // Formatear valores existentes
-        input.value = formatearMoneda(input.value);
-    });
+    campo.setSelectionRange(posicion, posicion);
+  });
+});
 </script>
-
 </body>
 </html>
