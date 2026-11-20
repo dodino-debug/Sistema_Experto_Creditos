@@ -1,78 +1,143 @@
 
 from flask import Flask, render_template, request
+import re
 
 app = Flask(__name__)
 
 
-
+# CONVERSIÓN DE VALORES MONETARIOS
 def convertir_moneda(valor):
+    """
+    Convierte '2.500.000' en 2500000.
+    Solo acepta pesos enteros no negativos.
+    """
     valor = str(valor).strip()
 
-    # Eliminar puntos de miles y espacios
-    valor = valor.replace(".", "").replace(" ", "")
+    if not re.fullmatch(r"\d{1,3}(?:\.\d{3})*|\d+", valor):
+        raise ValueError(
+            "Ingresa cantidades válidas, por ejemplo: 2.500.000"
+        )
 
-    if not valor.isdigit():
-        raise ValueError(f"Valor monetario inválido: {valor}")
+    return int(valor.replace(".", ""))
 
-    return int(valor)
 
+# MOTOR DE REGLAS DEL SISTEMA EXPERTO
 def evaluar_credito(ingresos, gastos, deudas, historial):
+
     disponible = ingresos - gastos - deudas
     endeudamiento = (deudas / ingresos) * 100
 
     razones = []
+    criterios = []
 
-    if disponible < 300000:
-        razones.append("Capacidad de pago insuficiente.")
+    # REGLA 1: CAPACIDAD DE PAGO
+    cumple_capacidad = disponible >= 600000
 
-    if endeudamiento > 45:
-        razones.append("Nivel de endeudamiento demasiado alto.")
+    criterios.append({
+        "nombre": "Capacidad de pago",
+        "cumple": cumple_capacidad,
+        "detalle": "Mínimo requerido: $600.000"
+    })
 
-    if historial == "malo":
-        razones.append("Historial crediticio desfavorable.")
+    if not cumple_capacidad:
+        razones.append(
+            "La capacidad de pago es inferior "
+            "al mínimo requerido de $600.000."
+        )
 
-    if razones:
-        estado = "RECHAZADO"
+    # REGLA 2: ENDEUDAMIENTO
+    cumple_endeudamiento = endeudamiento <= 30
 
-    elif disponible < 600000 or endeudamiento > 30 or historial == "regular":
-        estado = "EN REVISIÓN"
-        razones.append("La solicitud necesita una revisión adicional.")
+    criterios.append({
+        "nombre": "Nivel de endeudamiento",
+        "cumple": cumple_endeudamiento,
+        "detalle": "Máximo permitido: 30%"
+    })
 
-    else:
+    if not cumple_endeudamiento:
+        razones.append(
+            "El nivel de endeudamiento supera "
+            "el límite permitido del 30%."
+        )
+
+    # REGLA 3: HISTORIAL CREDITICIO
+    cumple_historial = historial == "bueno"
+
+    criterios.append({
+        "nombre": "Historial crediticio",
+        "cumple": cumple_historial,
+        "detalle": "Se requiere historial bueno"
+    })
+
+    if not cumple_historial:
+        razones.append(
+            "El historial crediticio debe ser bueno. "
+            "Los historiales regulares o malos no cumplen."
+        )
+
+    # DECISIÓN FINAL
+    aprobado = (
+        cumple_capacidad
+        and cumple_endeudamiento
+        and cumple_historial
+    )
+
+    if aprobado:
         estado = "APROBADO"
-        razones.append("Cumple con las condiciones financieras establecidas.")
+        razones.append(
+            "El solicitante cumple con todos los "
+            "criterios financieros establecidos."
+        )
+    else:
+        estado = "REPROBADO"
 
     return {
         "estado": estado,
         "razones": razones,
+        "criterios": criterios,
         "disponible": disponible,
         "endeudamiento": round(endeudamiento, 2)
     }
 
 
-
+# RUTA PRINCIPAL
 @app.route("/", methods=["GET", "POST"])
 def inicio():
+
     resultado = None
     error = None
 
+    datos = {
+        "ingresos": "",
+        "gastos": "",
+        "deudas": "",
+        "historial": "bueno"
+    }
+
     if request.method == "POST":
+
+        datos = {
+            "ingresos": request.form.get("ingresos", ""),
+            "gastos": request.form.get("gastos", ""),
+            "deudas": request.form.get("deudas", ""),
+            "historial": request.form.get("historial", "")
+        }
+
         try:
-            ingresos = convertir_moneda(request.form["ingresos"])
-            gastos = convertir_moneda(request.form["gastos"])
-            deudas = convertir_moneda(request.form["deudas"])
-            historial = request.form["historial"]
+            ingresos = convertir_moneda(datos["ingresos"])
+            gastos = convertir_moneda(datos["gastos"])
+            deudas = convertir_moneda(datos["deudas"])
+            historial = datos["historial"]
 
-            print("Ingresos:", ingresos)
-            print("Gastos:", gastos)
-            print("Deudas:", deudas)
-            print("Historial:", historial)
-
-            if ingresos <= 0 or gastos < 0 or deudas < 0:
-                raise ValueError("Los valores financieros no son válidos.")
+            if ingresos <= 0:
+                raise ValueError(
+                    "Los ingresos deben ser mayores que cero."
+                )
 
             if historial not in ("bueno", "regular", "malo"):
-                raise ValueError("El historial crediticio no es válido.")
+                raise ValueError(
+                    "Selecciona un historial crediticio válido."
+                )
 
             resultado = evaluar_credito(
                 ingresos,
@@ -81,14 +146,14 @@ def inicio():
                 historial
             )
 
-        except (ValueError, KeyError) as e:
-            print("ERROR EN LA EVALUACIÓN:", e)
-            error = f"Error al procesar los datos: {e}"
+        except ValueError as e:
+            error = str(e)
 
     return render_template(
         "index.html",
         resultado=resultado,
-        error=error
+        error=error,
+        datos=datos
     )
 
 

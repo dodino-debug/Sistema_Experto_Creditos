@@ -3,11 +3,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <title>CreditExpert | Sistema Experto</title>
+    <title>CreditExpert | Evaluación de Créditos</title>
+
     <link rel="icon" type="image/png"
-      href="{{ url_for('static', filename='img/logo.png') }}">
+          href="{{ url_for('static', filename='img/logo.png') }}">
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
@@ -28,9 +30,9 @@
                 <img
                     src="{{ url_for('static', filename='img/logo.png') }}"
                     alt="CreditExpert"
-                    class="sidebar-logo"
-                >
+                    class="sidebar-logo">
             </div>
+
             <div>
                 <h2>CreditExpert</h2>
                 <span>Sistema Experto</span>
@@ -64,7 +66,6 @@
     <!-- CONTENIDO PRINCIPAL -->
     <main class="main-content">
 
-        <!-- BARRA SUPERIOR -->
         <header class="topbar">
             <div>
                 <h3>Panel de evaluación</h3>
@@ -76,6 +77,7 @@
                     <span class="status-dot"></span>
                     Sistema operativo
                 </span>
+
                 <div class="avatar">
                     <i class="fa-solid fa-user"></i>
                 </div>
@@ -86,8 +88,9 @@
         <section id="inicio" class="hero">
 
             <div class="hero-content">
+
                 <span class="hero-badge">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <i class="fa-solid fa-brain"></i>
                     SISTEMA BASADO EN REGLAS
                 </span>
 
@@ -96,13 +99,14 @@
                 <p>
                     Analiza la información financiera de los
                     solicitantes mediante reglas de conocimiento
-                    y obtén recomendaciones claras y justificadas.
+                    y obtén resultados claros y justificados.
                 </p>
 
                 <a href="#evaluacion" class="hero-button">
                     Nueva evaluación
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
+
             </div>
 
             <div class="hero-illustration">
@@ -111,7 +115,7 @@
 
         </section>
 
-        <!-- TARJETAS INFORMATIVAS -->
+        <!-- TARJETAS -->
         <section class="cards">
 
             <div class="info-card">
@@ -140,13 +144,13 @@
                 </div>
                 <div>
                     <h3>Resultados rápidos</h3>
-                    <p>Recomendaciones automáticas.</p>
+                    <p>Decisiones automáticas justificadas.</p>
                 </div>
             </div>
 
         </section>
 
-        <!-- FORMULARIO -->
+        <!-- EVALUACIÓN -->
         <section id="evaluacion" class="evaluation-section">
 
             <div class="section-header">
@@ -164,7 +168,9 @@
                 </div>
             </div>
 
-            <form method="POST" action="#evaluacion" class="credit-form">
+            <form method="POST"
+                  action="#evaluacion"
+                  class="credit-form">
 
                 <div class="form-title">
                     <i class="fa-solid fa-wallet"></i>
@@ -185,9 +191,9 @@
                                 type="text"
                                 name="ingresos"
                                 class="input-moneda"
-                                placeholder="Ej: 2500000"
                                 inputmode="numeric"
-                                autocomplete="off"
+                                placeholder="Ej: 2.500.000"
+                                value="{{ datos.ingresos }}"
                                 required>
                         </div>
                     </div>
@@ -204,9 +210,9 @@
                                 type="text"
                                 name="gastos"
                                 class="input-moneda"
-                                placeholder="Ej: 1.200.000"
                                 inputmode="numeric"
-                                autocomplete="off"
+                                placeholder="Ej: 1.200.000"
+                                value="{{ datos.gastos }}"
                                 required>
                         </div>
                     </div>
@@ -223,9 +229,9 @@
                                 type="text"
                                 name="deudas"
                                 class="input-moneda"
-                                placeholder="Ej: 300.000"
                                 inputmode="numeric"
-                                autocomplete="off"
+                                placeholder="Ej: 300.000"
+                                value="{{ datos.deudas }}"
                                 required>
                         </div>
                     </div>
@@ -235,10 +241,30 @@
                             Historial crediticio
                         </label>
 
-                        <select id="historial" name="historial" required>
-                            <option value="bueno">Bueno</option>
-                            <option value="regular">Regular</option>
-                            <option value="malo">Malo</option>
+                        <select id="historial"
+                                name="historial" required>
+
+                            <option value="bueno"
+                                {% if datos.historial == 'bueno' %}
+                                selected
+                                {% endif %}>
+                                Bueno
+                            </option>
+
+                            <option value="regular"
+                                {% if datos.historial == 'regular' %}
+                                selected
+                                {% endif %}>
+                                Regular
+                            </option>
+
+                            <option value="malo"
+                                {% if datos.historial == 'malo' %}
+                                selected
+                                {% endif %}>
+                                Malo
+                            </option>
+
                         </select>
                     </div>
 
@@ -259,7 +285,7 @@
             </form>
 
             {% if error %}
-            <div class="error-message">
+            <div class="error-message" role="alert">
                 <i class="fa-solid fa-circle-exclamation"></i>
                 {{ error }}
             </div>
@@ -271,25 +297,23 @@
             <div class="result-card
                 {% if resultado.estado == 'APROBADO' %}
                     approved
-                {% elif resultado.estado == 'RECHAZADO' %}
-                    rejected
                 {% else %}
-                    review
+                    rejected
                 {% endif %}">
 
                 <div class="result-header">
                     <div>
-                        <span class="section-tag">RESULTADO</span>
+                        <span class="section-tag">
+                            RESULTADO
+                        </span>
                         <h2>Resultado de la evaluación</h2>
                     </div>
 
                     <div class="result-status">
                         {% if resultado.estado == 'APROBADO' %}
                             <i class="fa-solid fa-circle-check"></i>
-                        {% elif resultado.estado == 'RECHAZADO' %}
-                            <i class="fa-solid fa-circle-xmark"></i>
                         {% else %}
-                            <i class="fa-solid fa-clock"></i>
+                            <i class="fa-solid fa-circle-xmark"></i>
                         {% endif %}
 
                         {{ resultado.estado }}
@@ -301,7 +325,7 @@
                     <div class="metric">
                         <span>Capacidad disponible</span>
                         <strong>
-                            ${{ "{:,.0f}".format(resultado.disponible) }}
+                            ${{ "{:,.0f}".format(resultado.disponible).replace(",", ".") }}
                         </strong>
                     </div>
 
@@ -314,27 +338,71 @@
 
                 </div>
 
-                <div class="result-explanation">
+                <!-- REGLAS EVALUADAS -->
+                <div class="criteria-section">
                     <h3>
                         <i class="fa-solid fa-list-check"></i>
-                        Criterios de evaluación
+                        Verificación de criterios
+                    </h3>
+
+                    <div class="criteria-grid">
+
+                        {% for criterio in resultado.criterios %}
+
+                        <div class="criteria-item
+                            {% if criterio.cumple %}
+                                criteria-success
+                            {% else %}
+                                criteria-fail
+                            {% endif %}">
+
+                            <div class="criteria-icon">
+                                {% if criterio.cumple %}
+                                    <i class="fa-solid fa-check"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-xmark"></i>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <strong>{{ criterio.nombre }}</strong>
+                                <span>{{ criterio.detalle }}</span>
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+                <!-- EXPLICACIÓN -->
+                <div class="result-explanation">
+                    <h3>
+                        <i class="fa-solid fa-circle-info"></i>
+                        Explicación de la decisión
                     </h3>
 
                     <ul>
                         {% for razon in resultado.razones %}
                         <li>
-                            <i class="fa-solid fa-circle-info"></i>
+                            <i class="fa-solid fa-angle-right"></i>
                             {{ razon }}
                         </li>
                         {% endfor %}
                     </ul>
                 </div>
+
             </div>
+
             {% endif %}
+
         </section>
 
         <footer>
-            CreditExpert · Sistema Experto para Evaluación de Créditos
+            <span>
+                CreditExpert · Sistema Experto de Créditos
+            </span>
             <span>Proyecto académico</span>
         </footer>
 
@@ -342,6 +410,7 @@
 </div>
 
 <script>
+    // Navegación lateral
     const links = document.querySelectorAll(".nav-link");
 
     links.forEach(link => {
@@ -351,24 +420,50 @@
         });
     });
 
+    // Formato de miles
+    function formatearMoneda(valor) {
+        let numeros = valor.replace(/\D/g, "");
+        numeros = numeros.replace(/^0+(?=\d)/, "");
 
-document.querySelectorAll(".input-moneda").forEach(input => {
+        return numeros.replace(
+            /\B(?=(\d{3})+(?!\d))/g,
+            "."
+        );
+    }
 
-    input.addEventListener("input", function () {
+    document.querySelectorAll(".input-moneda").forEach(input => {
+        input.addEventListener("input", function () {
+            const posicion = this.selectionStart;
+            const antes = this.value.slice(0, posicion);
+            const cantidadDigitos = antes.replace(/\D/g, "").length;
 
-        // Conservar únicamente números
-        let valor = this.value.replace(/\D/g, "");
+            this.value = formatearMoneda(this.value);
 
-        // Evitar ceros innecesarios al inicio
-        valor = valor.replace(/^0+(?=\d)/, "");
+            if (cantidadDigitos === 0) {
+                this.setSelectionRange(0, 0);
+                return;
+            }
 
-        // Agregar puntos como separadores de miles
-        this.value = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            let digitos = 0;
+            let nuevaPosicion = this.value.length;
 
+            for (let i = 0; i < this.value.length; i++) {
+                if (/\d/.test(this.value[i])) {
+                    digitos++;
+                }
+
+                if (digitos === cantidadDigitos) {
+                    nuevaPosicion = i + 1;
+                    break;
+                }
+            }
+
+            this.setSelectionRange(nuevaPosicion, nuevaPosicion);
+        });
+
+        // Formatear valores existentes
+        input.value = formatearMoneda(input.value);
     });
-
-});
-
 </script>
 
 </body>
